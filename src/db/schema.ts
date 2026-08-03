@@ -9,5 +9,10 @@ export const users = pgTable("users", {
 });
 
 export const refreshTokens = pgTable("refresh_tokens", {
-	
+	id: uuid("id").primaryKey().defaultRandom(),
+	  userId: uuid("user_id").notNull().references(() => users.id),
+  tokenHash: varchar("token", { length: 255 }).notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  expiresAt: timestamp("expires_at").notNull(),
+  revokedAt: timestamp("revoked_at"),
 })
