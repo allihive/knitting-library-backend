@@ -43,3 +43,10 @@ export const patternRelations = relations(patterns, ({one}) => ({
 	})
 }))
 // refreshTokens → belongs to one user
+
+export const refreshTokensRelations = relations(refreshTokens, ({one}) => ({
+	user: one(users, {
+		fields: [refreshTokens.userId],
+		references: [users.id]
+	})
+}))
