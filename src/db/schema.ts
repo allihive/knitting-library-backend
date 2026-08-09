@@ -3,7 +3,8 @@ import { pgTable, uuid, varchar, timestamp, boolean, text, numeric, integer } fr
 
 export const users = pgTable("users", {
   id: uuid("id").primaryKey().defaultRandom(),
-  username: varchar("username", { length: 255 }).notNull(),
+  username: varchar("username", { length: 255 }),
+  email: varchar("email", {length: 255}).notNull(),
   displayName: varchar("display_name", {length: 255}),
   avatarUrl: varchar("avatar_url", {length: 255}),
   passwordHash: varchar("password_hash", { length: 255 }),
