@@ -1,4 +1,4 @@
-const bcrypt = require('bcrypt');
+import bcrypt from 'bcrypt'
 
 export async function hashPassword(plainPassword: string): Promise<string> {
 	return bcrypt.hash(plainPassword, 12);

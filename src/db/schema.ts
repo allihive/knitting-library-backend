@@ -41,7 +41,7 @@ export const patterns = pgTable("patterns", {
 })
 
 export const tools = pgTable("tools", {
-	id: uuid('id').defaultRandom().primaryKey(),
+	id: uuid('id').defaultRandom().primaryKey().unique(),
 	userId: uuid("user_id").notNull().references(() => users.id),
 	toolType: varchar("tool_type", {length: 255}).notNull(),
 	sizeMm: numeric('size_mm', {precision: 4, scale: 2}),
@@ -51,8 +51,8 @@ export const tools = pgTable("tools", {
 })
 
 export const yarn = pgTable("yarn", {
-	id: uuid('id').defaultRandom().primaryKey(),
-	userId: uuid('id').notNull().references(() => users.id),
+	id: uuid('id').defaultRandom().primaryKey().unique(),
+	userId: uuid('user_id').notNull().references(() => users.id),
 	yarnName: varchar("yarn_name", {length: 255}).notNull(),
 	brand: varchar("brand", {length: 255}),
 	material: varchar("material", {length: 100}),

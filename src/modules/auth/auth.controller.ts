@@ -5,22 +5,29 @@ import { db } from '../../db/index.js'
 import { users } from '../../db/schema.js'
 import { eq } from 'drizzle-orm'
 
-async function signup(req: Request<{},{}, SignupBody>, res: Response): Promise<void> {
+export async function signup(req: Request<{},{}, SignupBody>, res: Response): Promise<void> {
+	console.log('BODY:', req.body);
 	const { email, password } = req.body;
 	const passwordHash = await hashPassword(password);
-	const [user] = await db
-		.insert(users)
-		.values({email, passwordHash})
-		.returning();
-
-	if (!user) {
-		res.status(500).json({error: 'failed to create user'});
-		return;
+	try {
+		const [user] = await db
+			.insert(users)
+			.values({email, passwordHash})
+			.returning();
+	
+		if (!user) {
+			res.status(500).json({error: 'failed to create user'});
+			return;
+		}
+		res.status(201).json({id: user.id, email: user.email})
 	}
-	res.status(201).json({id: user.id, email: user.email})
+	catch (err) {
+		console.error('FULL ERROR', err);
+		res.status(500).json({error: 'Signup failed'})
+	}
 }
 
-async function login(req: Request<{}, {}, LoginBody>, res: Response): Promise<void>{
+export async function login(req: Request<{}, {}, LoginBody>, res: Response): Promise<void>{
 	const {email, password } = req.body;
 	const [user] = await db
 		.select()
@@ -43,3 +50,4 @@ async function login(req: Request<{}, {}, LoginBody>, res: Response): Promise<vo
 	}
 	res.status(200).json({id: user.id, email: user.email })
 }
+
