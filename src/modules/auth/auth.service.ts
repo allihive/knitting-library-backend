@@ -1,4 +1,6 @@
 import bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken'
+import type { TokenPayload } from './auth.types';
 
 export async function hashPassword(plainPassword: string): Promise<string> {
 	return bcrypt.hash(plainPassword, 12);
@@ -16,4 +18,12 @@ export function passwordSecurity(plainPassword: string): {valid: boolean; error?
 		return ({valid: false, error: 'Password must be less than 128 characters'});
 	}
 	return ({valid: true});
+}
+
+export function generateAccessToken(payload: TokenPayload): string {
+	return jwt.sign(payload, process.env.JWT_ACCESS_SECRET!, { expiresIn: process.env.JWT_ACCESS_EXPIRATION as any})
+}
+
+export function generateRefresToken(payload: TokenPayload): string {
+	return jwt.sign(payload, process.env.JWT_REFRESH_SECRET!, { expiresIn: process.env.JWT_REFRES_EXPIRATION as any})
 }

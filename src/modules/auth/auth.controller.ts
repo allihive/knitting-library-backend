@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express';
-import { hashPassword, passwordSecurity, verifyPassword } from './auth.service.js'
+import { generateAccessToken, generateRefresToken, hashPassword, passwordSecurity, verifyPassword } from './auth.service.js'
 import type { SignupBody, LoginBody } from './auth.types.js';
 import { db } from '../../db/index.js'
 import { users } from '../../db/schema.js'
@@ -60,6 +60,13 @@ export async function login(req: Request<{}, {}, LoginBody>, res: Response): Pro
 		res.status(401).json({error: 'Invalid credentials'})
 		return;
 	}
-	res.status(200).json({id: user.id, email: user.email })
+
+	const accessToken = generateAccessToken({userId: user.id, email: user.email});
+	const refreshToken = generateRefresToken({userId: user.id, email: user.email});
+	res.status(200).json({
+		id: user.id,
+		email: user.email,
+		accessToken,
+		refreshToken })
 }
 
