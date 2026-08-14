@@ -56,31 +56,30 @@ describe('login', () => {
 		expect(res.json).toHaveBeenCalledWith({error:'Email and password are required'});
 		expect(db.select).not.toHaveBeenCalled();
 	})
+	it ('Returns 200 when user successfully logs in', async () => {
+		const fakeUser = {
+			id: '123',
+			email: 'some@email.com',
+			passwordHash: await (await import('../auth.service')).hashPassword('somepassword')
+		};
+		(db.select as any).mockReturnValue({
+			from: () => ({
+				where: () => Promise.resolve([fakeUser]),
+			})
+		});
+		const req = { body: {email: 'some@email.com', password: 'somepassword'} } as Request;
+		const res = mockResponse();
+
+		await login(req as any, res);
+
+		expect(res.status).toHaveBeenCalledWith(200);
+		expect(res.json).toHaveBeenCalledWith({id: fakeUser.id, email: fakeUser.email })
+	})
 })
 
 
 /*
-  it('returns 200 with user data on successful login', async () => {
-    const fakeUser = {
-      id: '123',
-      email: 'test@example.com',
-      passwordHash: await (await import('./auth.service.js')).hashPassword('correctpass'),
-    };
 
-    (db.select as any).mockReturnValue({
-      from: () => ({
-        where: () => Promise.resolve([fakeUser]),
-      }),
-    });
-
-    const req = { body: { email: 'test@example.com', password: 'correctpass' } } as Request;
-    const res = mockResponse();
-
-    await login(req as any, res);
-
-    expect(res.status).toHaveBeenCalledWith(200);
-    expect(res.json).toHaveBeenCalledWith({ id: fakeUser.id, email: fakeUser.email });
-  });
 
   import { describe, it, expect, vi, beforeEach } from 'vitest';
 
