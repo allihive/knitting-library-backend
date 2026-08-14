@@ -29,6 +29,12 @@ export async function signup(req: Request<{},{}, SignupBody>, res: Response): Pr
 
 export async function login(req: Request<{}, {}, LoginBody>, res: Response): Promise<void>{
 	const {email, password } = req.body;
+
+	if (!email || !password) {
+		res.status(400).json({error: 'Email and password are required'});
+		return;
+	}
+
 	const [user] = await db
 		.select()
 		.from(users)
@@ -38,7 +44,6 @@ export async function login(req: Request<{}, {}, LoginBody>, res: Response): Pro
 		res.status(401).json({error: 'Invalid credentials'});
 		return;
 	}
-
 	if (!user.passwordHash) {
 		res.status(401).json({error: 'Invalid credentials'})
 		return;

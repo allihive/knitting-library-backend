@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest"
-import { hashPassword, verifyPassword } from "./auth.service"
-import { verify } from "node:crypto";
+import { hashPassword, verifyPassword } from "../auth.service"
 
+//unit tests
 describe ('hashPassword', () => {
 	it('produces a has different from the plain password', async () => {
 		const hash = await hashPassword('mypassword123');
