@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express';
-import { hashPassword, verifyPassword } from './auth.service.js'
+import { hashPassword, passwordSecurity, verifyPassword } from './auth.service.js'
 import type { SignupBody, LoginBody } from './auth.types.js';
 import { db } from '../../db/index.js'
 import { users } from '../../db/schema.js'
@@ -8,6 +8,13 @@ import { eq } from 'drizzle-orm'
 export async function signup(req: Request<{},{}, SignupBody>, res: Response): Promise<void> {
 	console.log('BODY:', req.body);
 	const { email, password } = req.body;
+
+	const passCheck = passwordSecurity(password);
+	if (!passCheck.valid) {
+		res.status(400).json({error: passCheck.error});
+		return;
+	}
+
 	const passwordHash = await hashPassword(password);
 	try {
 		const [user] = await db
