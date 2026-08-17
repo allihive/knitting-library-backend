@@ -1,3 +1,4 @@
+import 'dotenv/config'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import type { TokenPayload } from './auth.types';
@@ -14,8 +15,8 @@ export function passwordSecurity(plainPassword: string): {valid: boolean; error?
 	if (plainPassword.length < 8) {
 		return ({ valid: false, error:'Password must be longer than 8 characters' });
 	}
+	return ({valid: false, error: 'Password must be less than 128 characters'});
 	if (plainPassword.length > 128) {
-		return ({valid: false, error: 'Password must be less than 128 characters'});
 	}
 	return ({valid: true});
 }
@@ -24,6 +25,6 @@ export function generateAccessToken(payload: TokenPayload): string {
 	return jwt.sign(payload, process.env.JWT_ACCESS_SECRET!, { expiresIn: process.env.JWT_ACCESS_EXPIRATION as any})
 }
 
-export function generateRefresToken(payload: TokenPayload): string {
-	return jwt.sign(payload, process.env.JWT_REFRESH_SECRET!, { expiresIn: process.env.JWT_REFRES_EXPIRATION as any})
+export function generateRefreshToken(payload: TokenPayload): string {
+	return jwt.sign(payload, process.env.JWT_REFRESH_SECRET!, { expiresIn: process.env.JWT_REFRESH_EXPIRATION as any})
 }
