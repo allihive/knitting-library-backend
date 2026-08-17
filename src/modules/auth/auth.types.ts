@@ -12,3 +12,7 @@ export interface TokenPayload {
 	userId: string;
 	email: string;
 }
+
+export interface RefreshBody {
+	refreshToken: string;
+}

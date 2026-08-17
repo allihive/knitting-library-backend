@@ -15,7 +15,24 @@ export function authenticateToken(req: Request, res: Response, next: NextFunctio
 		next(); // proceed to actual route handler
 	} catch (err) {
 		res.status(403).json({error: 'Invalid or expired token'});
-		console.error('JWT VERIFY ERROR:', err); 
 		return
 	}
+}
+
+export function authenticateRefreshToken(req: Request, res: Response, next: NextFunction): void {
+  const { refreshToken } = req.body;
+
+  if (!refreshToken) {
+    res.status(401).json({ error: 'Refresh token required' });
+    return;
+  }
+
+  try {
+    const payload = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET!);
+    (req as any).user = payload;
+    next();
+  } catch (err) {
+    res.status(403).json({ error: 'Invalid or expired refresh token' });
+    return;
+  }
 }

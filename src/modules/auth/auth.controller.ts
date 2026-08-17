@@ -1,9 +1,10 @@
 import type { Request, Response } from 'express';
 import { generateAccessToken, generateRefreshToken, hashPassword, passwordSecurity, verifyPassword } from './auth.service.js'
-import type { SignupBody, LoginBody } from './auth.types.js';
+import type { SignupBody, LoginBody, RefreshBody, TokenPayload } from './auth.types.js';
 import { db } from '../../db/index.js'
 import { users } from '../../db/schema.js'
 import { eq } from 'drizzle-orm'
+import jwt  from 'jsonwebtoken'
 
 export async function signup(req: Request<{},{}, SignupBody>, res: Response): Promise<void> {
 	console.log('BODY:', req.body);
@@ -75,3 +76,8 @@ export async function getMe(req: Request, res: Response): Promise<void> {
 	res.status(200).json({ user });
 }
 
+export async function refresh(req: Request, res: Response): Promise<void> {
+	const { userId, email } = (req as any).user;
+	const newAccessToken = generateAccessToken({userId, email}) // non rotation for refresh token
+	res.status(200).json({accessToken: newAccessToken})
+}
