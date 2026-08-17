@@ -70,3 +70,8 @@ export async function login(req: Request<{}, {}, LoginBody>, res: Response): Pro
 		refreshToken })
 }
 
+export async function getMe(req: Request, res: Response): Promise<void> {
+	const user = (req as any).user;
+	res.status(200).json({ user });
+}
+
