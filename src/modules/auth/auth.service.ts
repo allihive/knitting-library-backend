@@ -15,8 +15,8 @@ export function passwordSecurity(plainPassword: string): {valid: boolean; error?
 	if (plainPassword.length < 8) {
 		return ({ valid: false, error:'Password must be longer than 8 characters' });
 	}
-	return ({valid: false, error: 'Password must be less than 128 characters'});
 	if (plainPassword.length > 128) {
+		return ({valid: false, error: 'Password must be less than 128 characters'});
 	}
 	return ({valid: true});
 }

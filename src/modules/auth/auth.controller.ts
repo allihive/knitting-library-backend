@@ -4,7 +4,7 @@ import type { SignupBody, LoginBody, RefreshBody, TokenPayload } from './auth.ty
 import { db } from '../../db/index.js'
 import { users } from '../../db/schema.js'
 import { eq } from 'drizzle-orm'
-import jwt  from 'jsonwebtoken'
+
 
 export async function signup(req: Request<{},{}, SignupBody>, res: Response): Promise<void> {
 	console.log('BODY:', req.body);
