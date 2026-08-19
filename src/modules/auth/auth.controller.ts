@@ -16,6 +16,11 @@ export async function signup(req: Request<{},{}, SignupBody>, res: Response): Pr
 		return;
 	}
 
+	const [existingUser] = await db.select().from(users).where(eq(users.email, email));
+	if (existingUser) {
+		res.status(409).json({error: 'email already in use'})
+	}
+
 	const passwordHash = await hashPassword(password);
 	try {
 		const [user] = await db
@@ -30,7 +35,6 @@ export async function signup(req: Request<{},{}, SignupBody>, res: Response): Pr
 		res.status(201).json({id: user.id, email: user.email})
 	}
 	catch (err) {
-		console.error('FULL ERROR', err);
 		res.status(500).json({error: 'Signup failed'})
 	}
 }
