@@ -19,6 +19,7 @@ export async function signup(req: Request<{},{}, SignupBody>, res: Response): Pr
 	const [existingUser] = await db.select().from(users).where(eq(users.email, email));
 	if (existingUser) {
 		res.status(409).json({error: 'email already in use'})
+		return;
 	}
 
 	const passwordHash = await hashPassword(password);
