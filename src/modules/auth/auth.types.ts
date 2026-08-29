@@ -16,3 +16,7 @@ export interface TokenPayload {
 export interface RefreshBody {
 	refreshToken: string;
 }
+
+export interface GoogleLoginBody {
+	credential: string;
+}
