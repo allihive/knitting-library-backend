@@ -7,7 +7,10 @@ import rateLimit from 'express-rate-limit';
 const app = express();
 
 app.use((cors({
-	origin: "https://aliceli.dev",
+	origin: [
+		"https://aliceli.dev", 
+		"https://www.aliceli.dev"
+	],
 	credentials: true,
 })))
 
