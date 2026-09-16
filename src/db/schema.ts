@@ -29,10 +29,6 @@ export const patterns = pgTable("patterns", {
 	userId: uuid("user_id").notNull().references(() => users.id),
 	patternName: varchar("pattern_name", {length: 255}).notNull(),
 	fileUrl: varchar('file_url', {length: 500}),
-	toolId: uuid('tool_id').references(() => tools.id),
-	toolNote: varchar("tool_note", {length: 100}),
-	yarnId: uuid('yarn_id').references(() => yarn.id),
-	yarnNote: varchar("yarn_note", {length: 100}),
 	difficulty: varchar("difficulty", {length: 255}),
 	status: varchar("status", {length: 255}),
 	sourceUrl: varchar("source_url", {length: 500}),
@@ -41,7 +37,7 @@ export const patterns = pgTable("patterns", {
 })
 
 export const tools = pgTable("tools", {
-	id: uuid('id').defaultRandom().primaryKey().unique(),
+	id: uuid('id').defaultRandom().primaryKey(),
 	userId: uuid("user_id").notNull().references(() => users.id),
 	toolType: varchar("tool_type", {length: 255}).notNull(),
 	sizeMm: numeric('size_mm', {precision: 4, scale: 2}),
@@ -51,7 +47,7 @@ export const tools = pgTable("tools", {
 })
 
 export const yarn = pgTable("yarn", {
-	id: uuid('id').defaultRandom().primaryKey().unique(),
+	id: uuid('id').defaultRandom().primaryKey(),
 	userId: uuid('user_id').notNull().references(() => users.id),
 	yarnName: varchar("yarn_name", {length: 255}).notNull(),
 	brand: varchar("brand", {length: 255}),
@@ -68,4 +64,20 @@ export const yarn = pgTable("yarn", {
 	comments: text('comments'),
 	createdAt: timestamp('created_at').defaultNow().notNull(),
 
+})
+
+export const patternTools = pgTable("pattern_tools", {
+	id: uuid("id").defaultRandom().primaryKey(),
+	patternId: uuid("pattern_id").notNull().references(()=>patterns.id, { onDelete: "cascade" }),
+	toolId: uuid("tool_id").notNull().references(()=> tools.id),
+	note: varchar("note", {length: 100}),
+	createdAt: timestamp("created_at").defaultNow().notNull()
+})
+
+export const patternYarns = pgTable("pattern_yarns", {
+	id: uuid("id").defaultRandom().primaryKey(),
+	patternId: uuid("pattern_id").notNull().references(() => patterns.id, { onDelete: "cascade" }),
+	yarnId: uuid("yarn_id").notNull().references(() => yarn.id),
+	note: varchar("note", {length: 100}),
+	createdAt: timestamp("created_at").defaultNow().notNull()
 })
