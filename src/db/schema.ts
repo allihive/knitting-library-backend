@@ -55,7 +55,7 @@ export const yarn = pgTable("yarn", {
 	color: varchar("color", {length: 100}),
 	gauge: varchar('gauge', {length: 100}),
 	weight: varchar('weight', {length: 20}),
-	needleSize: varchar('needle_size', {length: 20}),
+	needleSize: numeric('needle_size_mm', { precision: 4, scale: 2 }),
 	yardage: integer('yardage'),
 	grams: integer('grams'),
 	skeinCount: integer('skein_count'),
