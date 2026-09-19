@@ -41,6 +41,7 @@ export const tools = pgTable("tools", {
 	userId: uuid("user_id").notNull().references(() => users.id),
 	toolType: varchar("tool_type", {length: 255}).notNull(),
 	sizeMm: numeric('size_mm', {precision: 4, scale: 2}),
+	needleLengthCm: numeric('needle_length_cm', { precision: 5, scale: 2}),
 	material: varchar("material", {length: 100}),
 	photoUrl: varchar("photo_url", {length: 500}),
 	createdAt: timestamp('created_at').defaultNow().notNull(),
@@ -56,7 +57,8 @@ export const yarn = pgTable("yarn", {
 	gauge: varchar('gauge', {length: 100}),
 	weight: varchar('weight', {length: 20}),
 	needleSize: numeric('needle_size_mm', { precision: 4, scale: 2 }),
-	yardage: integer('yardage'),
+	lengthM: integer('length_m'),
+	recommendedNeedleMm: numeric('recommended_needle_mm', { precision: 4, scale: 2 }),
 	grams: integer('grams'),
 	skeinCount: integer('skein_count'),
 	photoUrl: varchar('photo_url', {length: 500}),
@@ -69,7 +71,9 @@ export const yarn = pgTable("yarn", {
 export const patternTools = pgTable("pattern_tools", {
 	id: uuid("id").defaultRandom().primaryKey(),
 	patternId: uuid("pattern_id").notNull().references(()=>patterns.id, { onDelete: "cascade" }),
-	toolId: uuid("tool_id").notNull().references(()=> tools.id),
+	toolType: varchar('tool_type', { length: 255 }).notNull(),
+	sizeMm: numeric('size_mm', { precision: 4, scale: 2 }),
+	needleLengthCm: numeric('needle_length_cm', { precision: 5, scale: 2 }),
 	note: varchar("note", {length: 100}),
 	createdAt: timestamp("created_at").defaultNow().notNull()
 })
@@ -77,6 +81,9 @@ export const patternTools = pgTable("pattern_tools", {
 export const patternYarns = pgTable("pattern_yarns", {
 	id: uuid("id").defaultRandom().primaryKey(),
 	patternId: uuid("pattern_id").notNull().references(() => patterns.id, { onDelete: "cascade" }),
+	recommendedNeedleMm: numeric('recommended_needle_mm', {precision: 4, scale: 2 }),
+	material: varchar('material', { length: 100 }),
+	minLengthM: integer('min_length_m'),
 	yarnId: uuid("yarn_id").notNull().references(() => yarn.id),
 	note: varchar("note", {length: 100}),
 	createdAt: timestamp("created_at").defaultNow().notNull()

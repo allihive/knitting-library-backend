@@ -8,6 +8,13 @@
       "when": 1789540963923,
       "tag": "0000_flowery_patch",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1789799341891,
+      "tag": "0001_bizarre_silk_fever",
+      "breakpoints": true
     }
   ]
 }

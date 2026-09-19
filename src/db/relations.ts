@@ -1,5 +1,5 @@
 import { relations } from 'drizzle-orm'
-import { users, tools, yarn, patterns, refreshTokens } from './schema'
+import { users, tools, yarn, patterns, refreshTokens, patternTools, patternYarns } from './schema'
 
 //1 user -> many tools, yarn, patterns, refreshTokens
 export const userRelations = relations(users, ({ many }) => ({
