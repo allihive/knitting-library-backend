@@ -13,7 +13,6 @@ export async function createYarn(req: Request, res:Response): Promise<void> {
 	const [newYarn] = await db.insert(yarn).values({
 	...validated,
 	userId: req.user.id,
-	needleSize: validated.needleSize?.toString(),
 }).returning();
 	res.status(201).json(newYarn);
 }

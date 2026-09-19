@@ -1,0 +1,1 @@
+ALTER TABLE "yarn" DROP COLUMN "needle_size_mm";
