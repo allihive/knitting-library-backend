@@ -17,5 +17,15 @@ export const createYarnSchema = z.object({
 	careInstruction: z.string().optional(),
 	comments: z.string().optional()
 })
-
+// {
+//   "yarnName": "Malabrigo Rios",
+//   "brand": "Malabrigo",
+//   "material": "100% Merino Wool",
+//   "color": "Ravelry Red",
+//   "weight": "worsted",
+//   "needleSize": 4.5,
+//   "yardage": 210,
+//   "grams": 100,
+//   "skeinCount": 3
+// }
 export type CreateYarnInput = z.infer<typeof createYarnSchema>

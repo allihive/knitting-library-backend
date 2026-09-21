@@ -1,9 +1,14 @@
 import type { Request, Response, NextFunction } from 'express'
 import jwt from 'jsonwebtoken'
 
+console.log('AUTH MIDDLEWARE FILE LOADED');
+
 export function authenticateToken(req: Request, res: Response, next: NextFunction): void {
+	console.log('authenticateToken called');
 	const authHeader = req.headers.authorization;
+	console.log('authHeader:', authHeader);
 	const token = authHeader && authHeader.split(' ')[1]; //"Bearer <token>"
+	console.log('extracted token:', token);
 
 	if (!token) {
 		res.status(401).json({error: 'Access token required'});

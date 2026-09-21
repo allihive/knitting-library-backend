@@ -16,4 +16,11 @@ export const createToolSchema = z.object({
 
 );
 
+// {
+//     "toolType": "circular needles",
+//     "sizeMm": 4.5,
+//     "needleLengthCm": 80,
+//     "material": "bamboo"
+// }
+
 export type CreateToolInput = z.infer<typeof createToolSchema>

@@ -12,7 +12,7 @@ export async function createYarn(req: Request, res:Response): Promise<void> {
 	const validated = createYarnSchema.parse(req.body);
 	const [newYarn] = await db.insert(yarn).values({
 	...validated,
-	userId: req.user.id,
+	userId: req.user.userId,
 }).returning();
 	res.status(201).json(newYarn);
 }
