@@ -85,6 +85,7 @@ export const patternYarns = pgTable("pattern_yarns", {
 	recommendedNeedleMm: numeric('recommended_needle_mm', {precision: 4, scale: 2 }),
 	material: varchar('material', { length: 100 }),
 	minLengthM: integer('min_length_m'),
+	minGrams: integer('min_grams'),
 	yarnId: uuid("yarn_id").notNull().references(() => yarn.id),
 	note: varchar("note", {length: 100}),
 	createdAt: timestamp("created_at").defaultNow().notNull()
