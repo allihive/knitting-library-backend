@@ -36,6 +36,13 @@
       "when": 1790013663637,
       "tag": "0004_remarkable_callisto",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1790058605221,
+      "tag": "0005_nifty_devos",
+      "breakpoints": true
     }
   ]
 }

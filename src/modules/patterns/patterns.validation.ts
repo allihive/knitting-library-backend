@@ -2,6 +2,7 @@ import { z } from 'zod'
 import { TOOL_TYPES } from '../tools/tool-types';
 
 const mmToString = (val: number | undefined) => val !== undefined ? val.toString() : undefined;
+
 export const patternToolSchema = z.object ({
 	toolType: z.enum((TOOL_TYPES)),
 	otherToolType: z.string().max(255).optional(),
@@ -25,7 +26,7 @@ export const createPatternSchema = z.object ({
 	patternName: z.string().min(1).max(255),
 	fileUrl: z.url().max(500).optional(),
 	tools: z.array(patternToolSchema).optional(),
-	yarn: z.array(patternYarnSchema).optional(),
+	yarns: z.array(patternYarnSchema).optional(),
 	difficulty: z.enum(['beginner', 'advanced beginner', 'intermediate', 'advanced']).optional(),
 	status: z.enum(['In queue', 'In progress', 'Finished']).optional(),
 	sourceUrl: z.url().max(500).optional(),
