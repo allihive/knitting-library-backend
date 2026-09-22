@@ -35,3 +35,17 @@ export async function createPattern(req: Request, res: Response): Promise<void> 
 	})
 	res.status(201).json(newPattern)
 }
+
+// {
+//     "patternName": "Cozy Cardigan",
+//     "sourceUrl": "https://example.com/pattern",
+//     "difficulty": "intermediate",
+//     "status": "In queue",
+//     "tools": [
+//         { "toolType": "circular needles", "sizeMm": 4.5, "needleLengthCm": 80, "note": "body" },
+//         { "toolType": "circular needles", "sizeMm": 4.0, "needleLengthCm": 40, "note": "ribbing" }
+//     ],
+//     "yarn": [
+//         { "material": "wool", "recommendedNeedleMm": 4.5, "minLengthM": 800, "minGrams": 350 }
+//     ]
+// }

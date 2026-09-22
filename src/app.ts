@@ -5,7 +5,7 @@ import rateLimit from 'express-rate-limit';
 import yarnRoutes from './modules/yarn/yarn.routes.js'
 import { errorHandler } from './modules/middleware/errorHandler.js';
 import toolsRoutes from './modules/tools/tools.route.js'
-
+import patternRoutes from './modules/patterns/patterns.route.js'
 
 const app = express();
 
@@ -29,7 +29,7 @@ const authLimiter = rateLimit({
 app.use('/auth', authLimiter, authRoutes);
 app.use('/yarn', yarnRoutes);
 app.use('/tools', toolsRoutes);
-
+app.use('/pattern', patternRoutes);
 app.use(errorHandler);
 
 
