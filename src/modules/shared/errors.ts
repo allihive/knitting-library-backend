@@ -4,3 +4,5 @@ export class NotFoundError extends Error {
 		this.name = 'NotFoundError';
 	}
 }
+
+//extends creates its own class like error, but own distinct type
