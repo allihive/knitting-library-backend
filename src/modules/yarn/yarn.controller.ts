@@ -4,6 +4,7 @@ import { yarn } from '../../db/schema'
 import type { Request, Response } from 'express';
 import { findOwnedResource } from "../shared/findOwnResources";
 import { eq } from 'drizzle-orm'
+import { idParamSchema } from "../shared/idParam.validation";
 
 export async function createYarn(req: Request, res:Response): Promise<void> {
 	if (!req.user) {
@@ -24,12 +25,8 @@ export async function getYarn(req: Request, res: Response): Promise<void> {
 		res.status(401).json({error: 'Unauthorized'});
 		return;
 	}
-	const { id } = req.params;
+	const { id } = idParamSchema.parse(req.params);
 
-	if (!id || typeof id !== 'string') {
-		res.status(400).json({error: 'Yarn id is required'});
-		return;
-	}
 	const yarnItem = await findOwnedResource(yarn, id, req.user.userId);
 	res.status(200).json(yarnItem);
 	return;

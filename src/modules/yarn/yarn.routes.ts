@@ -1,9 +1,11 @@
 import { Router } from "express";
-import { createYarn } from "./yarn.controller";
+import { createYarn, getAllYarn, getYarn } from "./yarn.controller";
 import { authenticateToken } from "../auth/auth.middleware";
 
 const router = Router();
 
-router.post('/', authenticateToken, createYarn,);
+router.post('/', authenticateToken, createYarn);
+router.get('/', authenticateToken, getAllYarn);
+router.get('/:id', authenticateToken, getYarn);
 
 export default router
