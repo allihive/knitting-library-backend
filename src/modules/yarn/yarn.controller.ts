@@ -1,4 +1,4 @@
-import { createYarnSchema } from "../yarn/yarn.validation";
+import { createYarnSchema, updateYarnSchema } from "../yarn/yarn.validation";
 import { db } from '../../db/index.js'
 import { yarn } from '../../db/schema'
 import type { Request, Response } from 'express';
@@ -42,4 +42,39 @@ export async function getAllYarn(req: Request, res: Response): Promise<void> {
 		.from(yarn)
 		.where(eq(yarn.userId, req.user.userId))
 	res.status(200).json(yarnItems);
+}
+
+export async function updateYarn(req: Request, res: Response): Promise<void> {
+	if (!req.user) {
+		res.status(401).json({error: 'Unauthorized'});
+		return;
+	}
+
+	const { id } = idParamSchema.parse(req.params);
+	await findOwnedResource(yarn, id, req.user.userId);
+	const validated = updateYarnSchema.parse(req.body);
+
+	const [updatedYarn] = await db 
+		.update(yarn)
+		.set(validated)
+		.where(eq(yarn.id, id))
+		.returning()
+
+	res.status(200).json(updatedYarn)
+}
+
+export async function deleteYarn(req: Request, res: Response): Promise<void> {
+	if (!req.user) {
+		res.status(401).json({error: 'Unauthorized'});
+		return;
+	}
+	const { id } = idParamSchema.parse(req.params);
+	await findOwnedResource(yarn, id, req.user.userId);
+
+	const [deletedYarn] = await db
+		.delete(yarn)
+		.where(eq(yarn.id, id))
+		.returning()
+
+	res.status(200).json(deletedYarn)
 }

@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { createYarn } from './yarn.controller';
 
 const mmToString = (val: number | undefined) => val !== undefined ? val.toString() : undefined;
 
@@ -17,6 +18,8 @@ export const createYarnSchema = z.object({
 	careInstruction: z.string().optional(),
 	comments: z.string().optional()
 })
+
+export const updateYarnSchema = createYarnSchema.partial();
 // {
 //   "yarnName": "Malabrigo Rios",
 //   "brand": "Malabrigo",
