@@ -67,3 +67,19 @@ export async function updateTool(req: Request, res: Response): Promise<void> {
 	res.status(200).json(updateTool);
 }
 
+export async function deleteTool(req: Request, res: Response): Promise<void> {
+	if (!req.user) {
+		res.status(401).json({error: 'Unauthorized'})
+		return;
+	}
+
+	const { id } = idParamSchema.parse(req.params);
+	await findOwnedResource(tools, id, req.user.userId);
+	
+	const [deleteTool] = await db
+		.delete(tools)
+		.where(eq(tools.id, id))
+		.returning()
+	
+	res.status(200).json(deleteTool);
+}
