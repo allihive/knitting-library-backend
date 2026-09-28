@@ -15,7 +15,7 @@ export const createToolSchema = z.object({
 	{ message: "otherToolType is required when tool type is 'other", path: ['otherToolType']}
 
 );
-
+export const updateToolSchema = createToolSchema.partial();
 // {
 //     "toolType": "circular needles",
 //     "sizeMm": 4.5,

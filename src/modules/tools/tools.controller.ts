@@ -5,6 +5,7 @@ import { tools } from "../../db/schema";
 import { idParamSchema } from "../shared/idParam.validation";
 import { findOwnedResource } from "../shared/findOwnResources";
 import { eq } from 'drizzle-orm'
+import { updateToolSchema } from './tools.validation'
 
 export async function createTool(req: Request, res: Response): Promise<void> {
 	if (!req.user) {
@@ -45,5 +46,24 @@ export async function getAllTools(req: Request, res: Response): Promise<void> {
 		.where(eq(tools.userId, req.user.userId))
 
 	res.status(200).json(toolItems)
+}
+
+export async function updateTool(req: Request, res: Response): Promise<void> {
+	if (!req.user) {
+		res.status(401).json({error: 'Unauthorized'})
+		return;
+	}
+
+	const { id } = idParamSchema.parse(req.params);
+	await findOwnedResource(tools, id, req.user.userId);
+	const validated = updateToolSchema.parse(req.body);
+
+	const [updateTool] = await db
+		.update(tools)
+		.set(validated)
+		.where(eq(tools.id, id))
+		.returning()
+
+	res.status(200).json(updateTool);
 }
 
