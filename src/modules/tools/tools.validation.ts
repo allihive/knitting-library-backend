@@ -12,7 +12,7 @@ export const toolBaseSchema = z.object({
 	photoUrl: z.url().max(500).optional()
 });
 
-const otherTypeRule = (data: { toolType?: string; otherToolType?: string }) =>
+const otherTypeRule = (data: { toolType?: string | undefined; otherToolType?: string | undefined }) =>
 	data.toolType !== 'other' || !!data.otherToolType;
 
 const otherTypeError = {
@@ -21,14 +21,14 @@ const otherTypeError = {
 };
 
 export const createToolSchema = toolBaseSchema.refine(otherTypeRule, otherTypeError);
-export
+export const updateToolSchema = toolBaseSchema.partial().refine(otherTypeRule, otherTypeError)
 
-export const updateToolSchema = createToolSchema.partial();
+export type CreateToolInput = z.infer<typeof createToolSchema>
+export type UpdateToolInput = z.infer<typeof updateToolSchema>
+
 // {
 //     "toolType": "circular needles",
 //     "sizeMm": 4.5,
 //     "needleLengthCm": 80,
 //     "material": "bamboo"
 // }
-
-export type CreateToolInput = z.infer<typeof createToolSchema>
