@@ -28,20 +28,30 @@ export const yarnRelations = relations(yarn, ({one, many}) => ({
 }))
 
 // patterns → belongs to one user, optionally one tool, optionally one yarn
-export const patternRelations = relations(patterns, ({one}) => ({
+export const patternRelations = relations(patterns, ({ one, many }) => ({
 	user: one(users, {
 		fields: [patterns.userId],
 		references: [users.id],
 	}),
-	tool: one(tools, {
-		fields: [patterns.toolId],
-		references: [tools.id],
-	}),
-	yarn: one(yarn, {
-		fields: [patterns.yarnId],
-		references: [yarn.id]
-	})
+	patternTools: many(patternTools),
+	patternYarn: many(patternYarns),
 }))
+
+// patternTools → belongs to one pattern
+export const patternToolsRelations = relations(patternTools, ({ one }) => ({
+	pattern: one(patterns, {
+		fields: [patternTools.patternId],
+		references: [patterns.id],
+	}),
+}));
+
+// patternYarns → belongs to one pattern
+export const patternYarnsRelations = relations(patternYarns, ({ one }) => ({
+	pattern: one(patterns, {
+		fields: [patternYarns.patternId],
+		references: [patterns.id],
+	}),
+}));
 // refreshTokens → belongs to one user
 
 export const refreshTokensRelations = relations(refreshTokens, ({one}) => ({

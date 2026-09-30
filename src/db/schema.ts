@@ -29,6 +29,8 @@ export const patterns = pgTable("patterns", {
 	userId: uuid("user_id").notNull().references(() => users.id),
 	patternName: varchar("pattern_name", {length: 255}).notNull(),
 	fileUrl: varchar('file_url', {length: 500}),
+	// toolId: uuid("tool_id").notNull().references(() => tools.id),
+	// yarnId: uuid("yarn_id").notNull().references(() => yarn.id),
 	difficulty: varchar("difficulty", {length: 255}),
 	status: varchar("status", {length: 255}),
 	sourceUrl: varchar("source_url", {length: 500}),
