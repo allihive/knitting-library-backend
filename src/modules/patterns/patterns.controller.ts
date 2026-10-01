@@ -59,6 +59,23 @@ export async function getPattern(req: Request, res: Response): Promise<void> {
 
 	res.status(200).json(pattern);
 }
+
+export async function getAllPatterns(req: Request, res: Response): Promise<void> {
+	if (!req.user) {
+		res.status(401).json({error: 'Unauthorized'});
+		return;
+	}
+
+	const pattern = await db.query.patterns.findMany ({
+		where: (patterns, { eq }) => eq(patterns.userId, req.user!.userId),
+		with: {
+		patternTools: true,
+		patternYarns: true,
+	},
+});
+	res.status(200).json(pattern);
+
+}
 // {
 //     "patternName": "Cozy Cardigan",
 //     "sourceUrl": "https://example.com/pattern",
