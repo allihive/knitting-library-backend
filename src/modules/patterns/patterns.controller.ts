@@ -78,8 +78,6 @@ export async function getAllPatterns(req: Request, res: Response): Promise<void>
 
 }
 
-
-
 export async function deletePattern(req: Request, res: Response): Promise<void> {
 	if (!req.user) {
 		res.status(401).json({error: 'Unauthorized'});
@@ -98,6 +96,20 @@ export async function deletePattern(req: Request, res: Response): Promise<void> 
 	res.status(200).json(deletePattern)
 	
 }
+
+export async function updatePattern(req: Request, res: Response): Promise<void> {
+
+}
+
+export async function replacePatternTools(req: Request, res: Response): Promise <void> {
+
+}
+
+export async function replacePatternYarn(req: Request, res: Response): Promise<void> {
+	
+}
+
+
 // {
 //     "patternName": "Cozy Cardigan",
 //     "sourceUrl": "https://example.com/pattern",
