@@ -2,6 +2,8 @@ import { db } from '../../db/index.js'
 import type { Request, Response } from 'express'
 import { patterns, patternYarns, patternTools } from '../../db/schema.js'
 import { createPatternSchema } from './patterns.validation.js'
+import { idParamSchema } from '../shared/idParam.validation.js';
+import { NotFoundError } from '../shared/errors.js';
 
 export async function createPattern(req: Request, res: Response): Promise<void> {
 	if (!req.user) {
@@ -36,6 +38,27 @@ export async function createPattern(req: Request, res: Response): Promise<void> 
 	res.status(201).json(newPattern)
 }
 
+export async function getPattern(req: Request, res: Response): Promise<void> {
+	if (!req.user) {
+		res.status(400).json({error: 'Unauthorized'});
+		return;
+	}
+
+	const { id } = idParamSchema.parse(req.params);
+
+	const pattern = await db.query.patterns.findFirst ({
+		where: (patterns, { eq, and }) => and(eq(patterns.id, id), eq(patterns.userId, req.user!.userId)),
+		with: {
+			patternTools: true,
+			patternYarns: true,
+		},
+	});
+	if (!pattern) {
+		throw new NotFoundError;
+	}
+
+	res.status(200).json(pattern);
+}
 // {
 //     "patternName": "Cozy Cardigan",
 //     "sourceUrl": "https://example.com/pattern",
