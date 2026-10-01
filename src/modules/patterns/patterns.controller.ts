@@ -4,6 +4,7 @@ import { patterns, patternYarns, patternTools } from '../../db/schema.js'
 import { createPatternSchema } from './patterns.validation.js'
 import { idParamSchema } from '../shared/idParam.validation.js';
 import { NotFoundError } from '../shared/errors.js';
+import { eq, and } from 'drizzle-orm';
 
 export async function createPattern(req: Request, res: Response): Promise<void> {
 	if (!req.user) {
@@ -75,6 +76,27 @@ export async function getAllPatterns(req: Request, res: Response): Promise<void>
 });
 	res.status(200).json(pattern);
 
+}
+
+
+
+export async function deletePattern(req: Request, res: Response): Promise<void> {
+	if (!req.user) {
+		res.status(401).json({error: 'Unauthorized'});
+		return;
+	}
+	const { id } = idParamSchema.parse(req.params);
+
+	const [deletePattern] = await db
+		.delete(patterns)
+		.where(and(eq(patterns.id, id), eq(patterns.userId, req.user.userId)))
+		.returning()
+	if (!deletePattern) {
+		throw new NotFoundError;
+	}
+
+	res.status(200).json(deletePattern)
+	
 }
 // {
 //     "patternName": "Cozy Cardigan",
