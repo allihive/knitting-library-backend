@@ -1,4 +1,4 @@
-import { describe, it, vi, expect } from 'vitest'
+import { describe, it, vi, expect, beforeEach } from 'vitest'
 import type { Request, Response } from 'express'
 
 //mock db module before importing controller
@@ -11,7 +11,6 @@ vi.mock('../../../db/index', () => ({
 
 import { db } from '../../../db/index'
 import { login } from '../auth.controller'
-import { beforeEach } from 'node:test'
 
 function mockResponse(): Response {
 	const res:any = {};
@@ -35,6 +34,8 @@ describe('login', () => {
 		const res = mockResponse();
 
 		await login(req as any, res);
+		console.log('Status:', (res.status as any).mock.calls);
+		console.log('DB select calls:', vi.mocked(db.select).mock.calls);
 		expect(res.status).toHaveBeenCalledWith(401);
 	})
 	it('Returns 400 when email input is empty', async () => {
@@ -42,6 +43,8 @@ describe('login', () => {
 		const res = mockResponse();
 
 		await login(req as any, res);
+		console.log('Status:', (res.status as any).mock.calls);
+console.log('DB select calls:', vi.mocked(db.select).mock.calls);
 		expect(res.status).toHaveBeenCalledWith(400);
 		expect(res.json).toHaveBeenCalledWith({error: 'Email and password are required'})
 		expect(db.select).not.toHaveBeenCalled();
@@ -73,7 +76,13 @@ describe('login', () => {
 		await login(req as any, res);
 
 		expect(res.status).toHaveBeenCalledWith(200);
-		expect(res.json).toHaveBeenCalledWith({id: fakeUser.id, email: fakeUser.email })
+		expect(res.json).toHaveBeenCalledWith(
+			expect.objectContaining({
+				id: fakeUser.id,
+				email: fakeUser.email,
+				accessToken: expect.any(String),
+				refreshToken: expect.any(String)
+			}))
 	})
 })
 

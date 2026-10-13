@@ -15,7 +15,10 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npx tsc --noEmit
-      - run: npx vitest run
+      - name: Run tests
+        run: npx vitest run
+        env: JWT_ACCESS_SECRET: process.env.JWT_ACCESS_SECRET
+              JWT_REFRES_SECRET: process.env.JWT_REFRESH_SECRET
 
   deploy:
     needs: test
