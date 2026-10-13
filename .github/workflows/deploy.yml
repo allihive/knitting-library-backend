@@ -29,7 +29,7 @@ jobs:
           script: |
             set -e
             cd knitting-library-backend
-            git pull origin main
+            git pull origin dev
             npm ci
             npx drizzle-kit migrate
             pm2 restart knitting-backend
