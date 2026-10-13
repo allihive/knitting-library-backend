@@ -18,8 +18,10 @@ jobs:
       - name: Run tests
         run: npx vitest run
         env:
-            JWT_ACCESS_SECRET: process.env.JWT_ACCESS_SECRET
-            JWT_REFRES_SECRET: process.env.JWT_REFRESH_SECRET
+          JWT_ACCESS_SECRET: ${{ secrets.JWT_ACCESS_SECRET }}
+          JWT_REFRESH_SECRET: ${{ secrets.JWT_REFRESH_SECRET }}
+          JWT_ACCESS_EXPIRATION: 900
+          JWT_REFRESH_EXPIRATION: 604800
 
   deploy:
     needs: test
