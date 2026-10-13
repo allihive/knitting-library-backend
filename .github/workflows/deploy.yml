@@ -17,8 +17,9 @@ jobs:
       - run: npx tsc --noEmit
       - name: Run tests
         run: npx vitest run
-        env: JWT_ACCESS_SECRET: process.env.JWT_ACCESS_SECRET
-              JWT_REFRES_SECRET: process.env.JWT_REFRESH_SECRET
+        env:
+            JWT_ACCESS_SECRET: process.env.JWT_ACCESS_SECRET
+            JWT_REFRES_SECRET: process.env.JWT_REFRESH_SECRET
 
   deploy:
     needs: test
