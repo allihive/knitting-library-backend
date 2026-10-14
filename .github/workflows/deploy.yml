@@ -1,20 +1,29 @@
+
 name: Test and Deploy
 
 on:
   push:
     branches: [dev]
 
+permissions:
+  contents: read
+  id-token: write
+
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: 18.20.8
           cache: npm
+
       - run: npm ci
+
       - run: npx tsc --noEmit
+
       - name: Run tests
         run: npx vitest run
         env:
@@ -26,16 +35,31 @@ jobs:
   deploy:
     needs: test
     runs-on: ubuntu-latest
+
     steps:
-      - uses: appleboy/ssh-action@v1.0.3
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
         with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2_SSH_KEY }}
-          script: |
-            set -e
-            cd knitting-library-backend
-            git pull origin dev
-            npm ci
-            npx drizzle-kit migrate
-            pm2 restart knitting-backend
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: eu-north-1
+
+      - name: Deploy through SSM
+        run: |
+          COMMAND_ID=$(aws ssm send-command \
+            --instance-ids "i-0459ae1b93737b5b1" \
+            --document-name "AWS-RunShellScript" \
+            --parameters '{"commands":["sudo -iu ec2-user bash -lc \"set -e; cd /home/ec2-user/knitting-library-backend && git pull origin dev && npm ci && npx drizzle-kit migrate && pm2 restart knitting-backend\""]}' \
+            --query "Command.CommandId" \
+            --output text)
+
+          echo "SSM command ID: $COMMAND_ID"
+
+          aws ssm wait command-executed \
+            --command-id "$COMMAND_ID" \
+            --instance-id "i-0459ae1b93737b5b1"
+
+          aws ssm get-command-invocation \
+            --command-id "$COMMAND_ID" \
+            --instance-id "i-0459ae1b93737b5b1" \
+            --query '{Status:Status,Output:StandardOutputContent,Errors:StandardErrorContent}' \
+            --output json
