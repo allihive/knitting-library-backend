@@ -51,7 +51,7 @@ jobs:
             --instance-ids "$INSTANCE_ID" \
             --document-name "AWS-RunShellScript" \
             --timeout-seconds 600 \
-            --parameters '{"commands":["sudo -iu ec2-user bash -lc \"set -e; cd /home/ec2-user/knitting-library-backend && git pull origin dev && npm ci && npm run migrate:prod && pm2 restart knitting-backend\""]}' \
+            --parameters '{"commands":["sudo -iu ec2-user bash -lc \"set -e; cd /home/ec2-user/knitting-library-backend && git pull origin dev && npm ci && npx drizzle-kit migrate && pm2 restart knitting-backend\""]}' \
             --query "Command.CommandId" \
             --output text)
           echo "SSM command ID: $COMMAND_ID"
